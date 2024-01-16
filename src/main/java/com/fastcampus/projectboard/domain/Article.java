@@ -21,11 +21,10 @@ import java.util.Set;
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
         @Index(columnList = "createdAt"),
-        @Index(columnList = "createdBy")
+        @Index(columnList = "createdBy")   //index는 audinting 클래스에 쓰는것보단 여기다 .
 })
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Article {
+public class Article  extends  AuditingFields{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,20 +42,6 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments
             =new LinkedHashSet<>();
-
-
-    //metadata
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @CreatedBy //Jpa 설정에 어떤값이 들어갈지 설정
-    @Column(nullable = false,length = 100)
-    private String createdBy;
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-    @LastModifiedBy
-    @Column(nullable = false,length = 100)
-    private String modifiedBy;
-
 
     protected Article() {
     }
