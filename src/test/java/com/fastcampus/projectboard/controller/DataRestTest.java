@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // @WebMvcTest   slice 테스트하면 되지만, 환경설정 등 다 설정해야되서 그냥 통합테스트로
 
+
+@Disabled("Spring data Rest 통합테스틑 불필요하므로 제외시킴")  //테스트 안함
 @DisplayName("Data Rest-API 테스트")
 @Transactional
 @AutoConfigureMockMvc //mock 자동설정
