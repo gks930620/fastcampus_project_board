@@ -10,11 +10,10 @@ import java.util.Optional;
 @EnableJpaAuditing
 @Configuration
 public class JpaConfig {
+
     @Bean
-    public AuditorAware<String> auditorAware(){
-        return () -> Optional.of("uno"); //TODO: 스프링 시큐리티 인증기능붙이면, 수정하기
+    public AuditorAware<String> auditorAware() {
+        return () -> Optional.of("uno"); // TODO: 스프링 시큐리티로 인증 기능을 붙이게 될 때, 수정하자
     }
-
-
 
 }
