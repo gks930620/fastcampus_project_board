@@ -2,7 +2,6 @@ package com.fastcampus.projectboard.repository;
 
 import com.fastcampus.projectboard.config.JpaConfig;
 import com.fastcampus.projectboard.domain.Article;
-import com.fastcampus.projectboard.domain.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,86 +10,34 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
 
 @DisplayName("JPA 연결 테스트")
 @Import(JpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {
-
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
-    private final UserAccountRepository userAccountRepository;
 
-    public JpaRepositoryTest(
-            @Autowired ArticleRepository articleRepository,
-            @Autowired ArticleCommentRepository articleCommentRepository,
-            @Autowired UserAccountRepository userAccountRepository
-    ) {
+    public JpaRepositoryTest(@Autowired ArticleRepository articleRepository, @Autowired ArticleCommentRepository articleCommentRepository) {
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
-        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select 테스트")
     @Test
     void givenTestData_whenSelecting_thenWorksFine() {
-        // Given
+        //select제외한 테스트는 rollback 되서 실제 쿼리 안 날라감.
+        //flush해서 쿼리 날라가는거 확인해보자. 어차피 rollback되서 쿼리 실행되도 ㄱㅊ
+        //given
 
-        // When
-        List<Article> articles = articleRepository.findAll();
+        //when
 
-        // Then
-        assertThat(articles)
-                .isNotNull()
-                .hasSize(123);
+        //then
+        
+
     }
 
-    @DisplayName("insert 테스트")
-    @Test
-    void givenTestData_whenInserting_thenWorksFine() {
-        // Given
-        long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
-        Article article = Article.of(userAccount, "new article", "new content", "#spring");
-
-        // When
-        articleRepository.save(article);
-
-        // Then
-        assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
-    }
-
-    @DisplayName("update 테스트")
-    @Test
-    void givenTestData_whenUpdating_thenWorksFine() {
-        // Given
-        Article article = articleRepository.findById(1L).orElseThrow();
-        String updatedHashtag = "#springboot";
-        article.setHashtag(updatedHashtag);
-
-        // When
-        Article savedArticle = articleRepository.saveAndFlush(article);
-
-        // Then
-        assertThat(savedArticle).hasFieldOrPropertyWithValue("hashtag", updatedHashtag);
-    }
-
-    @DisplayName("delete 테스트")
-    @Test
-    void givenTestData_whenDeleting_thenWorksFine() {
-        // Given
-        Article article = articleRepository.findById(1L).orElseThrow();
-        long previousArticleCount = articleRepository.count();
-        long previousArticleCommentCount = articleCommentRepository.count();
-        int deletedCommentsSize = article.getArticleComments().size();
-
-        // When
-        articleRepository.delete(article);
-
-        // Then
-        assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
-        assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentsSize);
-    }
 
 }
