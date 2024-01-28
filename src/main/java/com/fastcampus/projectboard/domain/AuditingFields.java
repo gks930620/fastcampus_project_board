@@ -14,29 +14,28 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @ToString
-public class AuditingFields {
+@EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
+public abstract class AuditingFields {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
-    @Column(nullable = false,updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt; // 생성일시
 
-    @CreatedBy //Jpa 설정에 어떤값이 들어갈지 설정
-    @Column(nullable = false,length = 100 , updatable = false)
-    private String createdBy;
-
-
+    @CreatedBy
+    @Column(nullable = false, updatable = false, length = 100)
+    private String createdBy; // 생성자
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    private LocalDateTime modifiedAt;
-    @LastModifiedBy
-    @Column(nullable = false,length = 100)
-    private String modifiedBy;
+    @Column(nullable = false)
+    private LocalDateTime modifiedAt; // 수정일시
 
+    @LastModifiedBy
+    @Column(nullable = false, length = 100)
+    private String modifiedBy; // 수정자
 
 }
