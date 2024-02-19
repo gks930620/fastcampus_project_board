@@ -1,4 +1,5 @@
 package com.fastcampus.projectboard.controller;
+
 import com.fastcampus.projectboard.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,17 +16,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("View 컨트롤러 - 인증")
 @Import(SecurityConfig.class)
-@WebMvcTest(Void.class)
+@WebMvcTest(Void.class)  //따로 테스트하는 Controller 클래스가 없음.
 public class AuthControllerTest {
 
     private final MockMvc mvc;
+
     public AuthControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;
     }
+
+
     @DisplayName("[view][GET] 로그인 페이지 - 정상 호출")
     @Test
     public void givenNothing_whenTryingToLogIn_thenReturnsLogInView() throws Exception {
         // Given
+
         // When & Then
         mvc.perform(get("/login"))
                 .andExpect(status().isOk())
