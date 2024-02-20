@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.service;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.ArticleComment;
+import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
@@ -18,24 +19,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
-
-//controller와 달리 단독으로 실행될 수 있음.  단 대상 service객체는 Mock으로 주입해줘야함.  그래서 Mockito사용을 위한 @ExtendWith()만 사용함
 @DisplayName("비즈니스 로직 - 댓글")
-@ExtendWith(MockitoExtension.class)   //junit5 단위테스트에는 이것만 있으면 됨  이거랑 @Mock,@InjectMocks 잘 설정하면 끝.   테스트내용은 BDDMockito를 사용하자.
+@ExtendWith(MockitoExtension.class)
 class ArticleCommentServiceTest {
 
     @InjectMocks private ArticleCommentService sut;
-    //@Mock과 @InjectMocks 차이는
-    //@Mock은 Mokito가 제공해주는 가짜객체인건 알잖아.
-    //@InjectMocks는 이 객체에 @Mock이 붙은 객체들을 Inject 해줌.
-
-    // Spring에서야 ArticleCommnetService에  repository들이 자동으로 주입되지만,
-    // Spring 컨테이너와 상관없이 Service를 유닛테스트하려고 하면,  당연히 필드들은 null 인데 그거를 테스트할 떄 가짜객체를 만들어서 주입해주는 기능
 
     @Mock private ArticleRepository articleRepository;
     @Mock private ArticleCommentRepository articleCommentRepository;
@@ -172,7 +166,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -189,12 +183,18 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 
 }
