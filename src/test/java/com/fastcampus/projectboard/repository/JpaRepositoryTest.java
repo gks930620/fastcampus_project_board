@@ -1,8 +1,10 @@
 package com.fastcampus.projectboard.repository;
 
 import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.ArticleComment;
 import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +143,35 @@ class JpaRepositoryTest {
         assertThat(articlePage.getTotalElements()).isEqualTo(17);
         assertThat(articlePage.getTotalPages()).isEqualTo(4);
     }
+
+
+    @DisplayName("대댓글 조회 테스트")
+    @Test
+    public  void  givenParentCommentId_whenSelecting_thenReturnsChildComments() throws Exception {
+        //given
+
+        //when
+        Optional<ArticleComment> parentComment = articleCommentRepository.findById(1L);
+
+        //then
+        assertThat(parentComment).get()
+                .hasFieldOrPropertyWithValue("parentCommentId",null)
+                .extracting("childComments", InstanceOfAssertFactories.COLLECTION)
+                    .hasSize(4);  //hasSize는 parentComment가 아니라 extracting 된거의 size.  주의하기
+    }
+
+    @DisplayName("대댓글이 있는 댓글 삭제 테스트")
+    @Test
+    public  void  givnArticleCommentIdHavingChildCommentsAndUserId_whenDeletingParentComment_thenDeletesEveryComment() throws Exception {
+        //given
+        long previousArticleCommentCount= articleCommentRepository.count();
+        //when
+        articleCommentRepository.deleteByIdAndUserAccount_UserId(1L,"uno"); //부모1개,자식4개
+        //then
+        assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount-5);
+    }
+
+    //삽입 조회 등도 테스트 만들고 싶으면 만들면 됨.
 
 
     @EnableJpaAuditing

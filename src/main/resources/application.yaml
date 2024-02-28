@@ -9,10 +9,12 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/board
-    username: changhee
+    url: jdbc:postgresql://localhost:5432/board #jdbc:mysql://localhost:3306/board
+    username: postgres     #changhee
     password: ckdlsk13!A
-    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # driver-class-name:
+    #com.mysql.cj.jdbc.Driver   사실 driverclassname은 url을 보고 알아서 맞춰줌 build gradle에 추가만 잘 하면 됨
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
