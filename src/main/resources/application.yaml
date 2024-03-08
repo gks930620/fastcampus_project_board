@@ -9,12 +9,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/board #jdbc:mysql://localhost:3306/board
-    username: postgres     #changhee
-    password: ckdlsk13!A
-
-    # driver-class-name:
-    #com.mysql.cj.jdbc.Driver   사실 driverclassname은 url을 보고 알아서 맞춰줌 build gradle에 추가만 잘 하면 됨
+    url:  ${LOCAL_DB_URL}   #jdbc:postgresql://localhost:5432/board
+    username: ${LOCAL_DB_USERNAME} #postgres     #changhee
+    password: ${LOCAL_DB_PASSWORD} #ckdlsk13!A
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
@@ -28,6 +25,22 @@ spring:
     base-path: /api
     detection-strategy: annotated
   thymeleaf3.decoupled-logic: true
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_OAUTH_CLIENT_ID}  #b1fa6cf9df90aa0843da84f6fbd5722a   #앱 설정 -> 앱 키 -> REST API 키
+            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}  # hTXumDL2NvHl355vmSPIz8TsNUbbMDs2
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 ---
 
